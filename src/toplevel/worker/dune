@@ -1,0 +1,61 @@
+; Worker library
+
+(library
+ (name worker)
+ (modules worker uTop_complete uTop_lexer uTop_token uTop)
+ (libraries
+  brr
+  top
+  js_of_ocaml-toplevel
+  js_of_ocaml-compiler
+  astring
+  rpclib)
+ (preprocess
+  (per_module
+   ((action
+     (run %{bin:cppo} -V OCAML:%{ocaml_version} %{input-file}))
+    uTop_complete
+    uTop)
+   ((pps js_of_ocaml-ppx)
+    worker))))
+
+(ocamllex uTop_lexer)
+
+(rule
+ (targets export_irmin.txt)
+ (action
+  (run jsoo_listunits -o %{targets} stdlib irmin irmin.mem lwt digestif.ocaml)))
+
+(executable
+ (name worker_irmin)
+ (modules worker_irmin)
+ (libraries worker irmin irmin.mem lwt digestif.ocaml)
+ (flags
+  (:standard -rectypes -linkall))
+ (preprocess
+  (pps js_of_ocaml-ppx))
+ (modes byte))
+
+(rule
+ (targets worker.js)
+ (action
+  (run
+   %{bin:js_of_ocaml}
+   --export
+   %{dep:export_irmin.txt}
+   --toplevel
+   --pretty
+   +toplevel.js
+   +dynlink.js
+   %{dep:worker_irmin.bc}
+   -o
+   %{targets})))
+
+(subdir
+ js/
+ (rule
+  (targets worker.js)
+  (deps ../worker.js)
+  (action
+   (progn
+    (run jsoo_minify ../worker.js -o worker.js)))))

@@ -1,0 +1,5 @@
+(library
+ (name top)
+ (libraries lwt brr js_of_ocaml-tyxml rpclib rpclib-lwt rpc_brr)
+ (preprocess
+  (pps js_of_ocaml-ppx ppx_deriving_rpc)))

@@ -1,0 +1,17 @@
+[submodule "jsoo-code-mirror"]
+	path = jsoo-code-mirror
+	url = https://github.com/patricoferris/jsoo-code-mirror
+[submodule "lwd"]
+	path = lwd
+	url = https://github.com/patricoferris/lwd
+	branch = brr
+[submodule "irmin-indexeddb"]
+	path = irmin-indexeddb
+	url = https://github.com/patricoferris/irmin-indexeddb
+	branch = irmin.2.7
+[submodule "ppx_deriving_brr"]
+	path = ppx_deriving_brr
+	url = https://github.com/patricoferris/ppx_deriving_brr
+[submodule "jsoo-rtc"]
+	path = jsoo-rtc
+	url = https://github.com/patricoferris/jsoo-rtc

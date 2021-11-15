@@ -1,0 +1,3 @@
+(library
+ (name rpc_brr)
+ (libraries brr rpclib lwt))

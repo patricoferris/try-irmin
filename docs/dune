@@ -1,0 +1,34 @@
+(rule
+  (target main.css)
+  (alias default)
+  (mode promote-until-clean)
+  (deps
+   (:data ../tailwind.config.js)
+   (source_tree ../node_modules)
+  index.html)
+  (action
+   (chdir
+    %{workspace_root}
+    ; We use node_modules/tailwindcss/lib/cli.js instead of `npx tailwindcss`
+    ; because dune won't include node_modules/.bin in the build, no matter
+    ; what I do.
+    (run
+     node
+     node_modules/tailwindcss/lib/cli.js
+     build
+     -c
+     tailwind.config.js
+     -o
+     %{target}))))
+
+
+(rule
+ (alias default)
+ (deps ../src/js/index.bc.js ../src/toplevel/worker/js/worker.js)
+ (targets index.js worker.js)
+ (mode promote-until-clean)
+ (action
+   (progn
+    (run npx esbuild --minify --bundle --outfile=index.js ../src/js/index.bc.js)
+    ; (copy ../src/toplevel/worker/js/irmin.js irmin.js)
+    (copy ../src/toplevel/worker/js/worker.js worker.js))))
